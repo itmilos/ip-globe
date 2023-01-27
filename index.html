@@ -1,0 +1,155 @@
+<!DOCTYPEhtml>
+<html>
+<body>
+<svg></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/topojson.v1.min.js"></script>
+<script>
+  constwidth = 960;
+  constheight = 500;
+  constconfig = {
+    speed: 0.005,
+    verticalTilt: -30,
+    horizontalTilt: 0,
+  };
+
+
+  letlocations = [{
+    "ip": "62.240.25.229",
+    "hostname": "dynamic-62-240-25-229.cpe.sn.co.rs",
+    "city": "Ripanj",
+    "region": "Central Serbia",
+    "country": "RS",
+    "latitude": "44.6386",
+    "longitude": "20.5214",
+    "org": "AS41937 TELEKOM SRBIJA a.d.",
+    "postal": "11232",
+    "timezone": "Europe/Belgrade",
+    "readme": "https://ipinfo.io/missingauth"
+  }];
+
+  letinfoDiv = d3.select('body').append('div').attr('id', 'info').style('display', 'none');
+
+  fetch('https://ipinfo.io/json')
+          .then((response) => response.json())
+          .then((data) => {
+// Extract the latitude and longitude from the API response
+            constlatitude = data.loc.split(',')[0];
+            constlongitude = data.loc.split(',')[1];
+            constregion = data.region;
+// Add the IP location to the locations array
+            locations.push({ latitude, longitude, region });
+            drawMarkers();
+          });
+
+  constsvg = d3.select('svg').attr('width', width).attr('height', height);
+  constmarkerGroup = svg.append('g');
+  constprojection = d3.geoOrthographic();
+  constinitialScale = projection.scale();
+  constpath = d3.geoPath().projection(projection);
+  constcenter = [width / 2, height / 2];
+
+  drawGlobe();
+  drawGraticule();
+  enableRotation();
+
+  function drawGlobe() {
+    d3.queue()
+            .defer(
+                    d3.json,
+                    'https://gist.githubusercontent.com/mbostock/4090846/raw/d534aba169207548a8a3d670c9c2cc719ff05c47/world-110m.json'
+            )
+            .await((error, worldData, locationData) => {
+              svg
+                      .selectAll('.segment')
+                      .data(topojson.feature(worldData, worldData.objects.countries).features)
+                      .enter()
+                      .append('path')
+                      .attr('class', 'segment')
+                      .attr('d', path)
+                      .style('stroke', '#' + Math.floor(Math.random() * 16777215).toString(16))
+                      .style('stroke-width', '1px')
+                      .style('fill', (d, i) => '#' + Math.floor(Math.random() * 16777215).toString(16))
+                      .style('opacity', '.6');
+            });
+  }
+
+  function drawGraticule() {
+    constgraticule = d3.geoGraticule().step([1, 1]);
+
+    svg.append('path').datum(graticule).attr('class', 'graticule').attr('d', path).style('fill', '#fff').style('stroke', '#ccc');
+  }
+
+  function enableRotation() {
+    d3.timer(function(elapsed) {
+      projection.rotate([config.speed * elapsed - 12000000000000000, config.verticalTilt, config.horizontalTilt]);
+      svg.selectAll('path').attr('d', path);
+      drawMarkers();
+    });
+  }
+
+  function drawMarkers() {
+    constmarkers = markerGroup.selectAll('circle').data(locations)
+    markers
+            .enter()
+            .insert('text')
+            .attr("font-size", "14px")
+            .attr("fill", '#000')
+            .attr("font-family", 'Helvetica Neue')
+            .attr("font-weight", '600')
+            .attr('x', (d) => projection([d.longitude, d.latitude])[0])
+            .attr('y', (d) => projection([d.longitude, d.latitude])[1])
+            .merge(markers)
+            .text((d) => d.region)
+
+    constmarkers2 = markerGroup.selectAll('circle').data(locations)
+    markers2
+            .enter()
+            .append('circle')
+            .merge(markers2)
+            .attr('cx', d => projection([d.longitude, d.latitude])[0])
+            .attr('cy', d => projection([d.longitude, d.latitude])[1])
+            .attr('fill', '#000')
+            .attr('r', 7);
+
+
+    markerGroup.each(function() {
+      this.parentNode.appendChild(this);
+    });
+  }
+
+  // function drawMarkers() {
+  //   const markers = markerGroup.selectAll('circle').data(locations);
+  //   markers
+  //     .enter()
+  //     .append('circle')
+  //     .attr('cx', (d) => projection([d.longitude, d.latitude])[0])
+  //     .attr('cy', (d) => projection([d.longitude, d.latitude])[1])
+  //     .attr('fill', (d) => {
+  //       const coordinate = [d.longitude, d.latitude];
+  //       gdistance = d3.geoDistance(coordinate, projection.invert(center));
+  //       return gdistance > 1.57 ? 'none' : 'steelblue';
+  //     })
+  //     .attr('stroke', '#fff')
+  //     .attr('stroke-width', '3')
+  //     .attr('r', 7)
+  //
+  //   // markers
+  //   //   .enter()
+  //   //   .insert('text')
+  //   //   .attr("font-size", "14px")
+  //   //   .attr("fill", '#000')
+  //   //   .attr("font-family", 'Helvetica Neue')
+  //   //   .attr("font-weight", '600')
+  //   //   .attr('x', (d) => projection([d.longitude, d.latitude])[0]+10)
+  //   //   .attr('y', (d) => projection([d.longitude, d.latitude])[1])
+  //   //   .merge(markers)
+  //   //   .text((d) => d.region)
+  //
+  //   markerGroup.each(function () {
+  //     this.parentNode.appendChild(this);
+  //   });
+  // }
+</script>
+</body>
+</html>

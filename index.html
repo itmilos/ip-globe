@@ -61,6 +61,8 @@
           const { latitude, longitude, region } = data;
           if (locations[0].region === region) {
             sameLocation = true;
+            setup();
+            showCTA('');
           } else {
             sameLocation = false;
             locations.push({
@@ -68,9 +70,9 @@
               longitude,
               region,
             });
+            setup();
+            showCTA('maybe');
           }
-          setup();
-          showCTA('maybe');
         })
         .catch((error) => {
           sameLocation = false;
@@ -163,10 +165,8 @@
                   config.horizontalTilt,
               ])
               .translate([width/2, height/2])
-              .clipAngle(90);
-
+              // .clipAngle(90);
           svg.selectAll("path").attr("d", path);
-
           drawMarkers();
         }, 50);
       }

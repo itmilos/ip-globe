@@ -20,6 +20,7 @@
     <meta property="twitter:description" content="maybe we are in similar space and the same time right now">
     <meta property="twitter:image" content="https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+      <link rel="shortcut icon" href="http://bit.ly/ghfavicon" width=32px>
       <style>
       body { text-align: center }
       .graticule {
@@ -45,6 +46,7 @@
     </style>
   </head>
   <body>
+    <canvas hidden id=cvl width=16 height=16></canvas>
     <svg class="globe"></svg>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
@@ -127,6 +129,9 @@
         drawGlobe();
         drawGraticule();
         enableRotation();
+        setTimeout(() => {
+          d3.select("svg").remove();
+        }, 10000);
       }
 
       function drawGlobe() {
@@ -223,9 +228,43 @@
         });
       }
 
-      window.onresize = function() {
-          setup();
+      window.onresize = function () {
+        d3.select("svg").remove();
       }
+
+      window.onload = function() {
+        cv = document.querySelector('#cvl'),
+                ctx = cv.getContext('2d');
+        if (!!ctx) {
+          C3qπ = 1.5 * Math.PI, // starting position[angle] for circle drawing
+                  tc = pct = 0,
+                  lnk = document.querySelector('link[rel*="icon"]');
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = 'fuchsia';
+          tc = setInterval(updateLoader, 100);
+          this.textContent = 'Loading';
+          this.style.backgroundColor = '#999';
+          this.setAttribute('disabled', '');
+        }
+      }
+
+      function updateLoader() {
+        with(ctx) {
+          clearRect(0, 0, 16, 16);
+          beginPath();
+          arc(8, 8, 6, C3qπ, (pct * 2 * Math.PI / 100 + C3qπ));
+          stroke();
+        }
+        lnk.href= cv.toDataURL('image/png'); // update favicon
+        if (pct === 100) {
+          clearInterval(tc);
+          btn.textContent = 'Loaded';
+          btn.style.backgroundColor = 'limegreen';
+          return;
+        }
+        pct++;
+      }
+
     </script>
   </body>
 </html>

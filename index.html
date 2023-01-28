@@ -1,120 +1,212 @@
 <!DOCTYPE html>
 <html>
-<body>
-<svg></svg>
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://d3js.org/topojson.v1.min.js"></script>
-<script>
-    let sameLocation = false;
-    const width = 960;
-    const height = 500;
-    const config = {
+  <head>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+      <style>
+      body { text-align: center }
+      .graticule {
+        stroke: blue;
+        fill-opacity: 0;
+        stroke-opacity: 0.5;
+        stroke-width: 0.25;
+      }
+      .cta {
+          font-family: Geogrotesque-SemiBold,sans-serif;
+          display: inline-block;
+          font-weight: 400;
+          letter-spacing: 1px;
+          color: #000;
+          font-size: 1.5rem;
+          line-height: 1;
+          padding: 0.4rem 1.2rem 0.2rem;
+          margin: 1rem;
+          border: 0.125rem solid #383733;
+          background-color: #4158D0;
+          background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <svg class="globe"></svg>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script>
+      let sameLocation = false;
+      const width = window.innerWidth;
+      const height = window.innerHeight - 150;
+      const config = {
         speed: 0.035,
         verticalTilt: -30,
         horizontalTilt: 0,
-    };
+      };
 
-    let locations = [{    "ip": "62.240.25.229",    "hostname": "dynamic-62-240-25-229.cpe.sn.co.rs",    "city": "Ripanj",    "region": "Central Serbia",    "country": "RS",    "latitude": "44.6386",    "longitude": "20.5214",    "org": "AS41937 TELEKOM SRBIJA a.d.",    "postal": "11232",    "timezone": "Europe/Belgrade",    "readme": "https://ipinfo.io/missingauth"}];
+      let locations = [
+        {
+          ip: "62.240.25.229",
+          hostname: "dynamic-62-240-25-229.cpe.sn.co.rs",
+          city: "Ripanj",
+          region: "Central Serbia",
+          country: "RS",
+          latitude: "44.6386",
+          longitude: "20.5214",
+          org: "AS41937 TELEKOM SRBIJA a.d.",
+          postal: "11232",
+          timezone: "Europe/Belgrade",
+          readme: "https://ipinfo.io/missingauth",
+        },
+      ];
 
-    fetch('https://ipinfo.io/json')
-        .then((response) => response.json())
+      fetch("https://ipinfo.io/json")
         .then((data) => {
-            const { loc, region } = data;
-            const [latitude, longitude] = loc.split(',');
-            if (locations[0].region === region) {
-                sameLocation = true;
-            } else {
-                sameLocation = false;
-                locations.push({
-                    latitude,
-                    longitude,
-                    region,
-                });
-            }
-            setup();
-        }).catch((error) => {
-        sameLocation = false;
-        console.log(error);
-        setup();
-    });
+          const { latitude, longitude, region } = data;
+          if (locations[0].region === region) {
+            sameLocation = true;
+          } else {
+            sameLocation = false;
+            locations.push({
+              latitude,
+              longitude,
+              region,
+            });
+          }
+          setup();
+          showCTA('maybe');
+        })
+        .catch((error) => {
+          sameLocation = false;
+          console.log(error);
+          setup();
+          showCTA('maybe');
+        });
 
-    const svg = d3.select('svg').attr('width', width).attr('height', height);
-    const markerGroup = svg.append('g');
-    const textGroup = svg.append('g');
-    const projection = d3.geoOrthographic();
-    const path = d3.geoPath().projection(projection);
+      const svg = d3.select("svg").attr("width", width).attr("height", height);
 
-    function setup() {
+      const markerGroup = svg.append("g");
+      const textGroup = svg.append("g");
+      const projection = d3.geoOrthographic();
+      const path = d3.geoPath().projection(projection);
+
+      function showCTA(param) {
+          var h1 = document.createElement("h1");
+          var text = document.createTextNode(param + " we are in similar space and the same time right now ");
+          h1.className = "cta"
+          h1.appendChild(text);
+
+          var a = document.createElement("a");
+          a.href = "mailto:0x3fc8d7599d0ae72c4dad05a150a449d7ac8e0783@ethereum.email";
+          a.innerHTML = "Send me an email";
+          h1.appendChild(a);
+
+          document.body.append(h1);
+
+          // window.document.body.innerHTML += "<h1>" + param + " we are in similar space and the same time right now <a href='mailto:0x3fc8d7599d0ae72c4dad05a150a449d7ac8e0783@ethereum.email'>Send me an email</a></h1>";
+      }
+
+      function setup() {
         drawGlobe();
         drawGraticule();
         enableRotation();
-    }
+      }
 
-    function drawGlobe() {
+      function drawGlobe() {
         d3.queue()
-            .defer(
-                d3.json,
-                'https://gist.githubusercontent.com/mbostock/4090846/raw/d534aba169207548a8a3d670c9c2cc719ff05c47/world-110m.json'
-            )
-            .await((error, worldData, locationData) => {
-                svg
-                    .selectAll('.segment')
-                    .data(topojson.feature(worldData, worldData.objects.countries).features)
-                    .enter()
-                    .append('path')
-                    .attr('class', 'segment')
-                    .attr('d', path)
-                    .style('stroke', '#' + Math.floor(Math.random() * 16777215).toString(16))
-                    .style('stroke-width', '1px')
-                    .style('fill', (d, i) => '#' + Math.floor(Math.random() * 16777215).toString(16))
-                    .style('opacity', '.6');
-            });
-    }
+          .defer(
+            d3.json,
+            "https://gist.githubusercontent.com/mbostock/4090846/raw/d534aba169207548a8a3d670c9c2cc719ff05c47/world-110m.json"
+          )
+          .await((error, worldData) => {
+            svg
+              .selectAll(".segment")
+              .data(
+                topojson.feature(worldData, worldData.objects.countries)
+                  .features
+              )
+              .enter()
+              .append("path")
+              .attr("class", "segment")
+              .attr("d", path)
+              .attr("width", width)
+              .attr("height", height)
+              .style(
+                "stroke",
+                "#" + Math.floor(Math.random() * 16777215).toString(16)
+              )
+              .style("stroke-width", "1px")
+              .style(
+                "fill",
+                (d, i) =>
+                  "#" + Math.floor(Math.random() * 16777215).toString(16)
+              )
+              .style("opacity", ".6");
+          });
+      }
 
-    function drawGraticule() {
-        const graticule = d3.geoGraticule().step([1, 1]);
-        svg.append('path').datum(graticule).attr('class', 'graticule').attr('d', path).style('fill', '#fff').style('stroke', '#ccc');
-    }
+      function drawGraticule() {
+        const graticule = d3.geoGraticule();
+        svg
+          .append("path")
+          .datum(graticule)
+          .attr("class", "graticule")
+          .attr("width", width)
+          .attr("height", height)
+          .attr("d", path)
+          .style("stroke", "red");
+      }
 
-    function enableRotation() {
+      function enableRotation() {
         d3.interval((elapsed) => {
-            projection.rotate([config.speed * elapsed - 12000000000000000, config.verticalTilt, config.horizontalTilt]);
-            svg.selectAll('path').attr('d', path);
-            drawMarkers();
-        },50)
-    }
+          projection
+              .scale(300)
+              .rotate([
+                  config.speed * elapsed - 120,
+                  config.verticalTilt,
+                  config.horizontalTilt,
+              ])
+              .translate([width/2, height/2])
+              .clipAngle(90);
 
-    function drawMarkers(sameLocation) {
-        const markers = markerGroup.selectAll('circle').data(locations)
+          svg.selectAll("path").attr("d", path);
+
+          drawMarkers();
+        }, 50);
+      }
+
+      function drawMarkers() {
+        const markers = markerGroup.selectAll("circle").data(locations);
         markers
-            .enter()
-            .append('circle')
-            .merge(markers)
-            .attr('cx', d => projection([d.longitude, d.latitude])[0])
-            .attr('cy', d => projection([d.longitude, d.latitude])[1])
-            .attr('fill', '#000')
-            .attr('r', 7);
+          .enter()
+          .append("circle")
+          .merge(markers)
+          .attr("cx", (d) => projection([d.longitude, d.latitude])[0])
+          .attr("cy", (d) => projection([d.longitude, d.latitude])[1])
+          .attr("fill", "#000")
+          .attr("r", 7);
 
         markerGroup.each(function () {
-            this.parentNode.appendChild(this);
+          this.parentNode.appendChild(this);
         });
 
-        const text = textGroup.selectAll('text').data(locations)
-        text.enter()
-            .append('text')
-            .merge(text)
-            .attr("font-size", "14px")
-            .attr("fill", '#000')
-            .attr("font-family", 'Helvetica Neue')
-            .attr("font-weight", '600')
-            .attr('x', (d) => projection([d.longitude, d.latitude])[0]+15)
-            .attr('y', (d) => projection([d.longitude, d.latitude])[1])
-            .text((d) => sameLocation ? 'We are in the same region' : d.region)
+        const text = textGroup.selectAll("text").data(locations);
+        text
+          .enter()
+          .append("text")
+          .merge(text)
+          .attr("font-size", "14px")
+          .attr("fill", "#000")
+          .attr("font-family", "Helvetica Neue")
+          .attr("font-weight", "600")
+          .attr("x", (d) => projection([d.longitude, d.latitude])[0] + 15)
+          .attr("y", (d) => projection([d.longitude, d.latitude])[1])
+          .text((d) => (sameLocation ? "We are in the same region" : d.region));
 
         textGroup.each(function () {
-            this.parentNode.appendChild(this);
+          this.parentNode.appendChild(this);
         });
-    }
-</script>
-</body>
+      }
+
+      window.onresize = function() {
+          setup();
+      }
+    </script>
+  </body>
 </html>

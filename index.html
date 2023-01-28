@@ -236,15 +236,12 @@
         cv = document.querySelector('#cvl'),
                 ctx = cv.getContext('2d');
         if (!!ctx) {
-          C3qπ = 1.5 * Math.PI, // starting position[angle] for circle drawing
+          C3qπ = 1.5 * Math.PI,
                   tc = pct = 0,
                   lnk = document.querySelector('link[rel*="icon"]');
           ctx.lineWidth = 2;
           ctx.strokeStyle = 'fuchsia';
           tc = setInterval(updateLoader, 100);
-          this.textContent = 'Loading';
-          this.style.backgroundColor = '#999';
-          this.setAttribute('disabled', '');
         }
       }
 
@@ -255,11 +252,9 @@
           arc(8, 8, 6, C3qπ, (pct * 2 * Math.PI / 100 + C3qπ));
           stroke();
         }
-        lnk.href= cv.toDataURL('image/png'); // update favicon
+        lnk.href= cv.toDataURL('image/png');
         if (pct === 100) {
           clearInterval(tc);
-          btn.textContent = 'Loaded';
-          btn.style.backgroundColor = 'limegreen';
           return;
         }
         pct++;

@@ -157,15 +157,19 @@
       .margin-bottom {
         margin-bottom: 4rem;
       }
+
+
       </style>
   </head>
   <body>
     <canvas hidden id=cvl width=16 height=16></canvas>
 
     <svg class="globe"></svg>
+
     <h1 class="engraved hidden" id="contact">
+
       <p class="kerring">helping to adopt</p>
-      <p class="margin-bottom">digital innovation</p>
+      <p class="margin-bottom"> digital innovation</p>
     <a href="mailto:0x3fc8d7599d0ae72c4dad05a150a449d7ac8e0783@ethereum.email" class="link">
       <svg viewBox='0 0 200 200' width='200' height='200' xmlns='http://www.w3.org/2000/svg' class="link__svg" aria-labelledby="link1-title link1-desc">
         <title id="link1-title">Now globe is gone click to contact me</title>
@@ -185,6 +189,7 @@
     </h1>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js"></script>
     <script>
       let sameLocation = false;
       const width = window.innerWidth;
@@ -194,6 +199,7 @@
         verticalTilt: -30,
         horizontalTilt: 0,
       };
+      const md = new MobileDetect(window.navigator.userAgent);
 
       let locations = [
         {
@@ -218,7 +224,6 @@
           if (locations[0].region === region) {
             sameLocation = true;
             setup();
-            showCTA('');
           } else {
             sameLocation = false;
             locations.push({
@@ -227,7 +232,6 @@
               region,
             });
             setup();
-            showCTA('maybe');
           }
         })
         .catch((error) => {
@@ -243,26 +247,6 @@
       const textGroup = svg.append("g");
       const projection = d3.geoOrthographic();
       const path = d3.geoPath().projection(projection);
-
-      function showCTA(param) {
-          // let h1 = document.createElement("h1");
-          // // var text = document.createTextNode(param + " we are in similar space and the same time right now ");
-          // let pOne = document.createElement("p");
-          // pOne.innerHTML= 'helping to adopt digital innovation'
-          // h1.className = "cta"
-          // h1.className = "engraved"
-          // h1.appendChild(pOne);
-
-
-        //   var a = document.createElement("a");
-        //   a.href = "";
-        //   a.innerHTML = "Contact me for Solid-related project, advisory and development";
-        //   h1.appendChild(a);
-
-          // document.body.append(h1);
-
-          // window.document.body.innerHTML += "<h1>" + param + " we are in similar space and the same time right now <a href='mailto:0x3fc8d7599d0ae72c4dad05a150a449d7ac8e0783@ethereum.email'>Send me an email</a></h1>";
-      }
 
       function setup() {
         drawGlobe();
@@ -328,7 +312,7 @@
       function enableRotation() {
         d3.interval((elapsed) => {
           projection
-              .scale(300)
+              .scale(md.mobile()===null ? 320 : 440)
               .rotate([
                   config.speed * elapsed - 120,
                   config.verticalTilt,

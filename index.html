@@ -57,6 +57,7 @@
       ];
 
       fetch("https://ipinfo.io/json")
+        .then((response) => response.json())
         .then((data) => {
           const { latitude, longitude, region } = data;
           if (locations[0].region === region) {

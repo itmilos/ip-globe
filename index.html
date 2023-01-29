@@ -2,23 +2,23 @@
 <html lang="en">
   <head>
     <!-- Primary Meta Tags -->
-    <title>Hi</title>
-    <meta name="title" content="Hi">
-    <meta name="description" content="maybe we are in similar space and the same time right now">
+    <title>Web3 Innovation Services</title>
+    <meta name="title" content="Web3 Innovation Services">
+    <meta name="description" content="Empowering businesses to embrace the digital future. Stay ahead with cutting-edge solutions and personalized strategies. Adopt innovation together today.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://metatags.io/">
-    <meta property="og:title" content="Hi">
-    <meta property="og:description" content="maybe we are in similar space and the same time right now">
-    <meta property="og:image" content="https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png">
+    <meta property="og:title" content="Web3 Innovation Services">
+    <meta property="og:description" content="Empowering businesses to embrace the digital future. Stay ahead with cutting-edge solutions and personalized strategies. Adopt innovation together today.">
+    <meta property="og:image" content="https://storage.fleek.zone/a48674e7-4015-4778-86e9-cf5431285dc6-bucket/Screenshot%202023-01-29%20at%2022.43.17.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://metatags.io/">
-    <meta property="twitter:title" content="Hi">
-    <meta property="twitter:description" content="maybe we are in similar space and the same time right now">
-    <meta property="twitter:image" content="https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png">
+    <meta property="twitter:title" content="Web3 Innovation Services">
+    <meta property="twitter:description" content="Empowering businesses to embrace the digital future. Stay ahead with cutting-edge solutions and personalized strategies. Adopt innovation together today.">
+    <meta property="twitter:image" content="https://storage.fleek.zone/a48674e7-4015-4778-86e9-cf5431285dc6-bucket/Screenshot%202023-01-29%20at%2022.43.17.png">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
       <link rel="shortcut icon" href="http://bit.ly/ghfavicon" width=32px>
       <style>
@@ -93,7 +93,7 @@
         stroke-width: 0.075em;
       }
       .link__text {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         -webkit-animation: rotateReverse normal infinite 20s linear;
         animation: rotateReverse normal infinite 20s linear;
         transform-origin: 50% 50%;
@@ -180,7 +180,7 @@
 
         <text class="link__text">
           <textPath href="#link-circle" stroke="none">
-            - let's innovate together - ping me -
+            &#9679; let's innovate together &#x2192;ping me
           </textPath>
         </text>
       </svg>
@@ -247,16 +247,17 @@
       const textGroup = svg.append("g");
       const projection = d3.geoOrthographic();
       const path = d3.geoPath().projection(projection);
+      const animationLength = 3500;
+      const animationIconLength = animationLength/100;
 
       function setup() {
         drawGlobe();
         drawGraticule();
         enableRotation();
         setTimeout(() => {
-          d3.select("svg").remove();
-          enableRotationPointer.stop();
+          disableRotation();
           document.getElementById("contact").classList.remove("hidden");
-        }, 3500);
+        }, animationLength);
       }
 
       function drawGlobe() {
@@ -279,14 +280,11 @@
               .attr("width", width)
               .attr("height", height)
               .style(
-                "stroke",
-                "#" + Math.floor(Math.random() * 16777215).toString(16)
+                "stroke", () => ['#f0f0f0','#bdbdbd','#636363'][Math.random()*2|0]
               )
               .style("stroke-width", "1px")
               .style(
-                "fill",
-                (d, i) =>
-                  "#" + Math.floor(Math.random() * 16777215).toString(16)
+                "fill",  () => ['#f0f0f0','#bdbdbd','#636363'][Math.random()*2|0]
               )
               .style("opacity", ".6");
           });
@@ -317,6 +315,11 @@
           svg.selectAll("path").attr("d", path);
           drawMarkers();
         }, 70);
+      }
+
+      function disableRotation() {
+        d3.select("svg").remove();
+        enableRotationPointer.stop();
       }
 
       function drawMarkers() {
@@ -369,8 +372,7 @@
       }
 
       window.onresize = function () {
-        enableRotationPointer.stop();
-        d3.select("svg").remove();
+        disableRotation()
       }
 
       window.onload = function() {
@@ -382,7 +384,7 @@
                   lnk = document.querySelector('link[rel*="icon"]');
           ctx.lineWidth = 2;
           ctx.strokeStyle = 'fuchsia';
-          tc = setInterval(updateLoader, 100);
+          tc = setInterval(updateLoader, animationIconLength);
         }
       }
 

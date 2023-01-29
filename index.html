@@ -260,7 +260,7 @@
             document.getElementsByClassName('cta')[0].appendChild(a);
             document.getElementsByClassName('cta')[0].appendChild(pTwo);
 
-        }, 2700);
+        }, 3700);
       }
 
       function drawGlobe() {
@@ -320,7 +320,7 @@
               .translate([width/2, height/2])
           svg.selectAll("path").attr("d", path);
           drawMarkers();
-        }, 50);
+        }, 70);
       }
 
       function drawMarkers() {
@@ -343,8 +343,8 @@
           .enter()
           .append("text")
           .merge(text)
-          .attr("font-size", "14px")
-          .attr("fill", "#eee")
+          .attr("font-size", md.mobile()===null ? "1.33rem" : "3rem")
+          .attr("fill", "#fff")
           .attr("font-family", "Helvetica Neue")
           .attr("font-weight", "600")
           .attr("x", (d) => projection([d.longitude, d.latitude])[0] + 15)

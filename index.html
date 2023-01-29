@@ -191,6 +191,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js"></script>
     <script>
       let sameLocation = false;
+      let enableRotationPointer;
       const width = window.innerWidth;
       const height = window.innerHeight - 150;
       const config = {
@@ -253,14 +254,9 @@
         enableRotation();
         setTimeout(() => {
           d3.select("svg").remove();
+          enableRotationPointer.stop();
           document.getElementById("contact").classList.remove("hidden");
-            let a = document.createElement("a");
-            let pTwo = document.createElement("p");
-            pTwo.innerHTML = "for Solid-related project, advisory and development";
-            document.getElementsByClassName('cta')[0].appendChild(a);
-            document.getElementsByClassName('cta')[0].appendChild(pTwo);
-
-        }, 3700);
+        }, 3500);
       }
 
       function drawGlobe() {
@@ -309,7 +305,7 @@
       }
 
       function enableRotation() {
-        d3.interval((elapsed) => {
+         enableRotationPointer =d3.interval((elapsed) => {
           projection
               .scale(md.mobile()===null ? 320 : 440)
               .rotate([
@@ -317,39 +313,55 @@
                   config.verticalTilt,
                   config.horizontalTilt,
               ])
-              .translate([width/2, height/2])
+              .translate([width/2, height/2]);
           svg.selectAll("path").attr("d", path);
           drawMarkers();
         }, 70);
       }
 
       function drawMarkers() {
-        const markers = markerGroup.selectAll("circle").data(locations);
+        function calculateRotationInRem() {
+          let result = Math.round(Math.abs(projection.rotate()[0]));
+          result += md.mobile() === null ? "10.33" : "30";
+          return result/80 + "%";
+        }
+
+        let locationsData = locations.map(d => {
+          let [x, y] = projection([d.longitude, d.latitude]);
+          return {
+            x,
+            y,
+            region: sameLocation ? "We are in the same region" : d.region,
+            fontSize: calculateRotationInRem(),
+          };
+        });
+
+        const markers = markerGroup.selectAll("circle").data(locationsData);
         markers
-          .enter()
-          .append("circle")
-          .merge(markers)
-          .attr("cx", (d) => projection([d.longitude, d.latitude])[0])
-          .attr("cy", (d) => projection([d.longitude, d.latitude])[1])
-          .attr("fill", "#eee")
-          .attr("r", 7);
+                .enter()
+                .append("circle")
+                .merge(markers)
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y)
+                .attr("fill", "#eee")
+                .attr("r", 7);
+
+        const text = textGroup.selectAll("text").data(locationsData);
+        text
+                .enter()
+                .append("text")
+                .merge(text)
+                .attr("font-size", d => d.fontSize)
+                .attr("fill", "#fff")
+                .attr("font-family", "Helvetica Neue")
+                .attr("font-weight", "600")
+                .attr("x", d => d.x + 15)
+                .attr("y", d => d.y)
+                .text(d => d.region);
 
         markerGroup.each(function () {
           this.parentNode.appendChild(this);
         });
-
-        const text = textGroup.selectAll("text").data(locations);
-        text
-          .enter()
-          .append("text")
-          .merge(text)
-          .attr("font-size", md.mobile()===null ? "1.33rem" : "3rem")
-          .attr("fill", "#fff")
-          .attr("font-family", "Helvetica Neue")
-          .attr("font-weight", "600")
-          .attr("x", (d) => projection([d.longitude, d.latitude])[0] + 15)
-          .attr("y", (d) => projection([d.longitude, d.latitude])[1])
-          .text((d) => (sameLocation ? "We are in the same region" : d.region));
 
         textGroup.each(function () {
           this.parentNode.appendChild(this);
@@ -357,6 +369,7 @@
       }
 
       window.onresize = function () {
+        enableRotationPointer.stop();
         d3.select("svg").remove();
       }
 

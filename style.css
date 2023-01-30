@@ -1,0 +1,129 @@
+body {
+    text-align: center;
+    height: 100%;
+}
+
+.graticule {
+    stroke: blue;
+    fill-opacity: 0;
+    stroke-opacity: 0.5;
+    stroke-width: 0.25;
+}
+.cta {
+    font-family: Geogrotesque-SemiBold, sans-serif;
+    display: inline-block;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #fff;
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0.4rem 1.2rem 0.2rem;
+    margin: 1rem;
+    border: 0.125rem solid #383733;
+    background-color: #000;
+    /*background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);*/
+}
+html,
+body {
+    height: 100%;
+}
+
+body {
+    background: #000;
+    display: grid;
+    place-content: center;
+    grid-gap: 2rem;
+}
+
+.link {
+    width: 16rem;
+    height: 16rem;
+    margin: 0 auto;
+    display: inline-block;
+    font: 300 1.55rem/1.4 "Josefin Sans";
+    text-transform: uppercase;
+    letter-spacing: 0.1175em;
+    word-spacing: 0.3em;
+    text-decoration: none;
+}
+.link__svg {
+    width: 100%;
+    height: auto;
+    transform-box: fill-box;
+    fill: #eee;
+    stroke: #eee;
+    stroke-width: 0.05em;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.link__cloud {
+    transform-origin: 50% 50%;
+    -webkit-animation: rotate normal infinite 60s linear;
+    animation: rotate normal infinite 60s linear;
+    fill: rgba(255, 255, 255, 0.15);
+}
+.link__face,
+.link__arrow {
+    transform-origin: 50% 50%;
+    transition: transform 0.15s cubic-bezier(0.32, 0, 0.67, 0);
+}
+.link:hover .link__face,
+.link:hover .link__arrow {
+    transform: scale(1.1);
+    transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+}
+.link__arrow {
+    stroke-width: 0.075em;
+}
+.link__text {
+    font-size: 1.1rem;
+    -webkit-animation: rotate normal infinite 20s linear;
+    animation: rotate normal infinite 20s linear;
+    transform-origin: 50% 50%;
+}
+.link:hover .link__text {
+    -webkit-animation-play-state: paused;
+    animation-play-state: paused;
+}
+.link--alt {
+    font-size: 1.15rem;
+    letter-spacing: 0;
+    word-spacing: 0;
+}
+
+@-webkit-keyframes rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+.engraved {
+    font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial,
+    sans-serif;
+    text-transform: uppercase;
+    display: block;
+    font-size: 2rem;
+    color: #f1ebe5;
+    font-weight: bold;
+    margin: 1rem;
+    letter-spacing: 0;
+    text-align: center;
+}
+
+.kerring {
+    letter-spacing: 0.08rem;
+}
+
+.margin-bottom {
+    margin-bottom: 4rem;
+}

@@ -52,7 +52,7 @@ const markerGroup = svg.append("g");
 const textGroup = svg.append("g");
 const projection = d3.geoOrthographic();
 const path = d3.geoPath().projection(projection);
-const animationLength = 3500;
+const animationLength = 5500;
 const animationIconLength = animationLength / 100;
 
 function setup() {
@@ -112,7 +112,7 @@ function drawGraticule() {
 function enableRotation() {
     enableRotationPointer = d3.interval((elapsed) => {
         projection
-            .scale(md.mobile() === null ? 320 : 440)
+            .scale(1)
             .rotate([
                 config.speed * elapsed + 2520,
                 config.verticalTilt,
@@ -132,8 +132,7 @@ function disableRotation() {
 function drawMarkers() {
     function calculateRotationInRem() {
         let result = Math.round(Math.abs(projection.rotate()[0]));
-        result += md.mobile() === null ? "10.33" : "30";
-        return result / 80 + "%";
+        return result / 30 + "%";
     }
 
     let locationsData = locations.map((d) => {

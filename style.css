@@ -1,5 +1,13 @@
+html {
+    height: 100%;
+}
+
 body {
     text-align: center;
+    background: #000;
+    display: grid;
+    place-content: center;
+    grid-gap: 2rem;
     height: 100%;
 }
 
@@ -23,20 +31,9 @@ body {
     background-color: #000;
     /*background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);*/
 }
-html,
-body {
-    height: 100%;
-}
-
-body {
-    background: #000;
-    display: grid;
-    place-content: center;
-    grid-gap: 2rem;
-}
 
 .link {
-    width: 16rem;
+    width: 23rem;
     height: 16rem;
     margin: 0 auto;
     display: inline-block;
@@ -119,7 +116,7 @@ body {
     sans-serif;
     text-transform: uppercase;
     display: block;
-    font-size: 2rem;
+    font-size: 4rem;
     color: #f1ebe5;
     font-weight: bold;
     margin: 1rem;
@@ -128,20 +125,9 @@ body {
 }
 
 .kerring {
-    letter-spacing: 0.08rem;
+    letter-spacing: 0.16rem;
 }
 
 .margin-bottom {
     margin-bottom: 4rem;
-}
-
-@media only screen and (max-width: 600px) {
-   .engraved {
-       font-size: 6rem;
-   }
-
-   .link {
-       width: 26rem;
-       height: 26rem;
-   }
 }

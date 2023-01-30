@@ -47,12 +47,11 @@ fetch("https://ipinfo.io/json")
     });
 
 const svg = d3.select("svg").attr("width", width).attr("height", height);
-
 const markerGroup = svg.append("g");
 const textGroup = svg.append("g");
 const projection = d3.geoOrthographic();
 const path = d3.geoPath().projection(projection);
-const animationLength = 4800;
+const animationLength = 4700;
 const animationIconLength = animationLength / 100;
 
 function setup() {
@@ -61,7 +60,6 @@ function setup() {
     enableRotation();
     setTimeout(() => {
         disableRotation();
-        document.getElementById("contact").classList.remove("hidden");
     }, animationLength);
 }
 
@@ -125,7 +123,8 @@ function enableRotation() {
 }
 
 function disableRotation() {
-    d3.select("svg").remove();
+    document.getElementById("contact").classList.remove("hidden");
+    d3.select("svg.globe").remove();
     enableRotationPointer.stop();
 }
 
